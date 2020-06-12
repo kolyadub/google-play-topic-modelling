@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Topic modelling report</title>
+	<!-- <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" /> -->
+	<script src="/static/js/Chart.min.js"></script>
+	<script src="/static/js/utils.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+</head>
+
+<body>
+	<style>
+		* {
+			font-size: 100%;
+			font-family: 'Source Sans Pro', sans-serif;
+		}
+
+		body {
+			background-color: whitesmoke;
+		}
+
+		.thead {
+			font: outline;
+			padding: 5px;
+			font-family: 'Source Sans Pro', sans-serif;
+			/* border-spacing : 0 5px; */
+			border-radius: 3px;
+			padding-left: 15px;
+			padding-right: 15px;
+			/* border-spacing: 0 5px; */
+			width: 100%;
+			width: 1500px;
+		}
+
+		.headertext {
+			text-align: center;
+			font-family: 'Source Sans Pro', sans-serif;
+			/* padding-bottom: 10px; */
+		}
+
+		.headertexth4 {
+			text-align: center;
+			font-family: 'Source Sans Pro', sans-serif;
+			padding-bottom: 30px;
+			margin-left: 200px;
+			margin-right: 200px;
+		}
+
+		@media screen and (max-width: 992px) {
+			.headertexth4 {
+			text-align: center;
+			font-family: 'Source Sans Pro', sans-serif;
+			padding-bottom: 30px;
+			margin-left: 100px;
+			margin-right: 100px;
+		}
+		}
+	</style>
+	<h2 id="header" class="headertext"> </h2>
+	<h4 class="headertexth4">
+		The pie chart shows outlined categories (topics). Each category is presented as a color with corresponding
+		keywords.
+		Click on an area in the pie chart to open the most relevat reviews for the category. You will see results under
+		the pie chart.</h4>
+	<div id="canvas-holder" style="width:85%" , class="container">
+		<canvas style="margin-bottom: 30px" id="chart-area"></canvas>
+	</div>
+	<script>
+		var randomScalingFactor = function () {
+			return Math.round(Math.random() * 100);
+		};
+		// var model_data = "{{data}}".replace(/&#39;/g, '"').replace(/&#34;/g, "'");
+		var model_data = "{{data.model_data}}".replace(/&#39;/g, '"');
+		var app_title = "{{data.app_title}}".replace(/&#39;/g, '').replace(/&#34;/g, '');
+		var count = "{{data.count}}".replace(/&#39;/g, '').replace(/&#34;/g, '');
+		var scores = "{{data.scores}}".replace(/&#39;/g, '').replace(/&#34;/g, '').replace("[", '').replace("]", '');
+		console.log(count, scores);
+		console.log(model_data);
+		// preserve newlines, etc - use valid JSON
+		// model_data = model_data.replace(/\\n/g, "")
+		// 	.replace(String.fromCharCode(38), "")
+		// 	.replace(String.fromCharCode(92), "")
+		// 	.replace(/, &#34;/g, ', "')
+		// 	.replace(/, #34;/g, ', "')
+		// 	.replace(/&#34;];/g, '"]')
+		// 	.replace(/#34;];/g, '"]')
+		// 	.replace(/\[&#34;/g, '["')
+		// 	.replace(/\[#34;/g, '["')
+		// 	.replace(/\&#34;, /g, '", ')
+		// 	.replace(/I"/g, "I'")
+		// 	.replace(/i"/g, "i'")
+		// 	.replace(/It"/g, "It'")
+		// 	.replace(/it"/g, "it")
+		// 	.replace(/we"/g, "we'")
+		// 	.replace(/We"/g, "We'");
+		console.log(model_data);
+		var obj = JSON.parse(model_data);
+		var topics = [];
+		var number_of_reviews = [];
+		var keywords_dates = {};
+		var keywords_reviews = {};
+		var paragraph = document.getElementById("header");
+		var text = document.createTextNode("LDA categories for " + count + " " + app_title + " reviews with scores " + scores);
+		paragraph.appendChild(text);
+		let keys = Object.keys(obj);
+		for (var i = 0; i < keys.length; i++) {
+			var instance = obj[keys[i]]
+			topics.push(instance['keywords']);
+			number_of_reviews.push(instance['number_of_reviews']);
+			keywords_reviews[instance['keywords']] = instance['reviews']
+			keywords_dates[instance['keywords']] = instance['dates']
+		}
+		var slice_start = 0;
+		var slice_end = 10;
+
+		var config = {
+			type: 'pie',
+			data: {
+				datasets: [{
+					data: number_of_reviews,
+					backgroundColor: [
+						window.chartColors.red,
+						window.chartColors.orange,
+						window.chartColors.yellow,
+						window.chartColors.green,
+						window.chartColors.blue,
+						window.chartColors.purple,
+						window.chartColors.litegreen,
+						window.chartColors.darkblue,
+						window.chartColors.brightyellow,
+						window.chartColors.grey],
+					label: 'Dataset 1',
+				}],
+				labels: topics,
+			},
+			options: {
+				plugins: {
+					datalabels: {
+						labels: {
+							percentage: {
+								color: '#616363',
+								// borderColor: '#616363',
+								// borderWidth: 1,
+								// borderRadius: 4,
+								formatter: (value, ctx) => {
+									let sum = 0;
+									let dataArr = ctx.chart.data.datasets[0].data;
+									dataArr.map(data => {
+										sum += data;
+									});
+									let percentage = (value * 100 / sum).toFixed(1) + "%";
+									return percentage;
+								},
+								align: 'bottom'
+							},
+							value: {
+								color: '#4b4d4d',
+								font: { size: 18 },
+
+							}
+						},
+						// formatter: function (value) {
+						// 	return Math.round(value) + '%';},
+						font: {
+							weight: 'bold',
+						}
+					}
+
+				},
+				responsive: true,
+				legend: {
+					position: 'bottom',
+					labels: {
+						fontFamily: "Source Sans Pro",
+						fontColor: "black",
+						boxWidth: 50,
+						padding: 15,
+						fontFamily: 'Arial',
+						fontSize: 12
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem, data) {
+							var label = data.labels[tooltipItem.index];
+							return label;
+						}
+					}
+				},
+			}
+		};
+		var canvas = document.getElementById('chart-area');
+
+		window.onload = function () {
+			Chart.defaults.global.defaultFontFamily = "Source Sans Pro";
+			var ctx = canvas.getContext('2d');
+			window.myPie = new Chart(ctx, config);
+		};
+
+		canvas.onclick = function (evt) {
+			var activePoints = window.myPie.getElementsAtEvent(evt);
+			if (activePoints[0]) {
+				var existing_table = document.getElementById('topic_table')
+				if (existing_table) {
+					existing_table.remove();
+				}
+				var idx = activePoints[0]['_index'];
+				var chartData = activePoints[0]['_chart'].config.data;
+				var label = chartData.labels[idx];
+				var color = chartData.datasets[0].backgroundColor[idx];
+				var value = chartData.datasets[0].data[idx];
+				var body = document.getElementsByTagName('body')[0];
+				var container = document.createElement('div')
+				container.className = 'container'
+				var tbl = document.createElement('table');
+				tbl.id = 'topic_table'
+				tbl.className = 'table table-striped'
+				tbl.style.width = '100%';
+				var tbdy = document.createElement('tbody');
+				var thead = document.createElement('thead');
+				var th_thead = document.createElement('th');
+				th_thead.className = "thead";
+				th_thead.appendChild(document.createTextNode("Top reviews with keywords: " + label.join(", ")));
+				th_thead.style.backgroundColor = color;
+				var tr = document.createElement('tr');
+				var th1 = document.createElement('th');
+				var th2 = document.createElement('th');
+				th1.appendChild(document.createTextNode("Review:"));
+				th2.appendChild(document.createTextNode("Review date:"));
+				th2.style.textAlign = "left";
+				tr.appendChild(th1);
+				tr.appendChild(th2);
+				thead.appendChild(th_thead);
+				tbdy.appendChild(thead);
+				tbdy.appendChild(tr);
+				for (var i = 0; i < keywords_reviews[label].length; i++) {
+					var tr = document.createElement('tr');
+					for (var j = 0; j < 2; j++) {
+						if (j == 0) {
+							var td = document.createElement('td');
+							td.appendChild(document.createTextNode(keywords_reviews[label][i]))
+							tr.appendChild(td)
+						}
+						if (j == 1) {
+							var td = document.createElement('td');
+							td.style.width = '10%';
+							td.appendChild(document.createTextNode(keywords_dates[label][i]))
+							tr.appendChild(td)
+						}
+					}
+					tbdy.appendChild(tr);
+				}
+				tbl.appendChild(tbdy);
+				container.appendChild(tbl);
+				body.appendChild(container)
+			}
+		};
+		var colorNames = Object.keys(window.chartColors);
+	</script>
+</body>
+
+</html>
