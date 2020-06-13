@@ -1,22 +1,28 @@
 # coding=utf8
-from flask import Flask, render_template, render_template_string, request
+from flask import Flask, render_template, render_template_string, request, Response, redirect, url_for
 import json
 import model
 import os.path
 import re
+import requests
+import redis
+import time
 
-app = Flask(__name__, static_url_path="/static/", static_folder='/Users/nd/Documents/GitHub/first_flask_web/static/')
-
+app = Flask(__name__, static_url_path="/static/", static_folder='/Users/nd/Documents/GitHub/google-play-topic-modelling/static/')
+req_form = {}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
    return render_template("index.html")
 
-
+@app.route("/loading", methods=["GET", "POST"])
+def loading():
+    data = request.form
+    return render_template("loading.html", data=data)
+    
 @app.route("/report", methods=["GET", "POST"])
 def report():
     app_link, app_title, count, scores = '', '', 0, []
-
     app_link = request.form['search']
     if '&' in app_link:
         app_link = app_link[app_link.index('=') + 1:app_link.index('&')]
@@ -65,14 +71,15 @@ def report():
             file.write(json.dumps(data))
 
 
-    # commands = ''
-    # filename = 'file2.txt'
-    # with open(filename) as fh:
-    #     for line in fh:
-    #         commands += line
-    # data = json.loads(commands)
+        # commands = ''
+        # filename = 'file2.txt'
+        # with open(filename) as fh:
+        #     for line in fh:
+        #         commands += line
+        # data = json.loads(commands)
 
     return render_template("report.html", data=data)
+
 
 # @app.errorhandler(Exception)
 # def handle_error(e):
@@ -87,7 +94,6 @@ def report():
 #     # return render_template("error.html", e=original), 500
 
 #     return render_template("error.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True) 

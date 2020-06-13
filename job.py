@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from pprint import pprint
 import itertools
+import datetime
 
 import gensim
 import gensim.corpora as corpora
@@ -49,14 +50,17 @@ def get_gp_title(application_name):
 def get_data_gp():
     result = []
     for score in scores:
-        result_current, continuation_token = reviews(
-            application_name,
-            lang=language,
-            country=country,
-            sort=Sort.NEWEST,  # defaults to Sort.MOST_RELEVANT
-            count=count_per_score,  # defaults to 100
-            filter_score_with=score,  # defaults to None(means all score)
-        )
+        try:
+            result_current, continuation_token = reviews(
+                application_name,
+                lang=language,
+                country=country,
+                sort=Sort.NEWEST,  # defaults to Sort.MOST_RELEVANT
+                count=count_per_score,  # defaults to 100
+                filter_score_with=score,  # defaults to None(means all score)
+            )
+        except IndexError:
+                result_current = [{'content' :'Empty content', 'at': datetime.datetime(2020, 6, 6, 13, 41, 46)}]
         result.extend(result_current)
     print(scores, count, count_per_score, filename, "NUMBER: ", len(result))
     return result
@@ -65,7 +69,7 @@ def get_data_gp():
 def preprocess_text_rus(text):
     """
     Removing punctuation and lemmatization.
-    """
+    """    
     text = text.translate(
         str.maketrans(string.punctuation, " " * len(string.punctuation))
     )
@@ -89,8 +93,9 @@ def df_from_preproc():
     reviews_list = []
     date = []
     for i in range(len(result)):
-        reviews_list.append(result[i]["content"])
-        date.append(result[i]["at"])
+        if result[i]["content"]:
+            reviews_list.append(result[i]["content"])
+            date.append(result[i]["at"])
 
     df = pd.DataFrame(data={"date": date, "text": reviews_list})
 
@@ -227,11 +232,11 @@ if __name__ == "__main__":
     scores_to_permute = [[1,2],[3,4],[5]]
     counts_to_permute = [100, 200, 500]
     # permutations = [[app_ids[4]], [[1,2],[5]], [100, 200]]
-    permutations = [app_ids, scores_to_permute, counts_to_permute]
-
+    permutations = [app_ids[26:], scores_to_permute, counts_to_permute]
+    # permutations = [['ru.yandex.yandexnavi'], [[5]], [200]]
     for perm in list(itertools.product(*permutations)):
         application_name = perm[0]
-        scores = perm[1]  # Review scores
+        scores = perm[1] 
         count = perm[2]
         count_per_score = int(count/len(scores))
         app_title = get_gp_title(application_name)

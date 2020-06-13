@@ -2,7 +2,16 @@
   font-size: 100%;
   font-family: 'Source Sans Pro', sans-serif;
  }
- 
+ div#loading {
+    top: 200 px;
+    margin: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 160px;
+    height: 24px;
+    background: url(/static/ajax-loader.gif) no-repeat;
+    cursor: wait;
+  }
 html {
   line-height: 1.15;
   /* 1 */
@@ -37,10 +46,7 @@ section {
  * Correct the font size and margin on `h1` elements within `section` and
  * `article` contexts in Chrome, Firefox, and Safari.
  */
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
+
 
 /* Grouping content
    ========================================================================== */
@@ -457,8 +463,37 @@ legend {
   box-sizing: border-box;
 }
 
+.header {
+  padding-top: 200px;
+  padding-left: 25px;
+  padding-right: 25px;
+  background-color: whitesmoke;
+  margin: 0px;
+
+
+}
+.h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+  margin: 0px;
+
+  /* align-self: center ; */
+}
+
+.h2{
+  font-size: 1em;
+  padding-top: 10px;
+  /* padding-right: 200px; */
+  /* padding-left: 0px; */
+}
+.h3{
+  /* font-size: 0.5em; */
+  padding-top: 0px;
+  font-size: smaller;
+  color: gray;
+}
 .s003 {
-  min-height: 100vh;
+  /* min-height: 60vh; */
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: center;
@@ -469,12 +504,14 @@ legend {
   background-color: whitesmoke;
   background-size: cover;
   background-position: center center;
-  padding: 15px;
+  padding: 25px;
+  padding-top: 20px;
+  padding-bottom: 350px;
 }
 
 .s003 form {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   margin-bottom: 0;
 }
 
@@ -494,6 +531,7 @@ legend {
 
 .s003 form .inner-form .input-field {
   height: 68px;
+  background-color: white;
 }
 
 .s003 form .inner-form .input-field input {
@@ -636,13 +674,33 @@ legend {
   box-shadow: none;
 }
 
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .s003 form .inner-form .input-field {
     height: 68px;
   }
-}
+  } */
+  
 
 @media screen and (max-width: 767px) {
+  .header {
+    padding-top: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: whitesmoke;
+    margin: 0px;
+  }
+  .h2{
+    padding-top: 10px;
+  }
+  .h3{
+  /* font-size: 0.5em; */
+  padding-top: 5px;
+  font-size: smaller;
+  color: gray;
+}
+  .s003{
+    padding-top: 15px;
+  }
   .s003 form .inner-form {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;

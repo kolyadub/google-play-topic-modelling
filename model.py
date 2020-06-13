@@ -12,6 +12,7 @@ from google_play_scraper import Sort, reviews, app
 import nltk
 
 nltk.download("stopwords")
+mallet_path = "mallet-2.0.8/bin/mallet"  # Folder path with Mallet
 
 import emoji
 import re
@@ -131,7 +132,6 @@ def topic_keywords():
 
     corpus = [id2word.doc2bow(words) for words in data_words]
 
-    mallet_path = "mallet-2.0.8/bin/mallet"  # Folder path with Mallet
     best_model = gensim.models.wrappers.LdaMallet(
         mallet_path, corpus=corpus, num_topics=num_topics, id2word=id2word
     )

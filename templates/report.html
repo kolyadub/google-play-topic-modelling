@@ -81,10 +81,9 @@
 		console.log(count, scores);
 		console.log(model_data);
 		// preserve newlines, etc - use valid JSON
-		// model_data = model_data.replace(/\\n/g, "")
+		model_data = model_data.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t")
 		// 	.replace(String.fromCharCode(38), "")
-		// 	.replace(String.fromCharCode(92), "")
-		// 	.replace(/, &#34;/g, ', "')
+			.replace(String.fromCharCode(92),String.fromCharCode(92,92));
 		// 	.replace(/, #34;/g, ', "')
 		// 	.replace(/&#34;];/g, '"]')
 		// 	.replace(/#34;];/g, '"]')

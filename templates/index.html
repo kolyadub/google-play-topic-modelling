@@ -30,18 +30,31 @@
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
 
 </head>
-
+<script type="text/javascript">// <![CDATA[
+  function preloader(){
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("content").style.display = "block";
+  }//preloader
+  window.onload = preloader;
+// ]]></script>
 <body>
+  <h1 class="header h1">
+    Mini topic modelling service for Google Play applications
+  </h1 >
+  <h2 class="header h2">It helps to categorize reviews for an application based on Latent Dirichlet Allocation (LDA) algorithm. The categories will be outlined with the most descriptive keywords.</h2>
+  <!-- <h3 class="header h3">* The categorization may take up to 30 seconds and currently available only for 'ru' region </h3> -->
   <div class="s003">
-    <form name="input" action="{{ url_for('report') }}" method="POST">
+    <div id="loading"></div>
+    <form name="input" action="{{url_for('loading')}}" method="POST">
       <div class="inner-form">
         <div class="input-field second-wrap">
           <input name="search" rel="play.google.com"
-            placeholder="e.g. https://play.google.com/store/apps/details?id=ru.mail.mailapp" 
+            placeholder="Put a Google Play link here (e.g. https://play.google.com/store/apps/details?id=ru.mail.mailapp)" 
             oninvalid="this.setCustomValidity('Please enter a valid URL in the form https://play.google.com/store/apps/details?id=')"
             pattern="^https?:\/\/(www.)?play.google.com\/store\/apps\/details\?id=.+" 
             oninput="this.setCustomValidity('')"
             required/>
+            <h3 class="h3">* The categorization may take up to 30 seconds and currently available only in 'ru' region </h3>
         </div>
         <div class="input-field first-wrap">
           <div class="input-select">
@@ -54,7 +67,6 @@
               <option value="200">200</option>
               <option value="500">500</option>
             </select>
-            <div id="second-wrap"> </div>
           </div>
         </div>
         <div class="input-field first-wrap">
@@ -68,7 +80,6 @@
               <option value="Bad">Bad — 1, 2</option>
               <option value="Okay">Okay — 3, 4</option>
             </select>
-            <div id="third-wrap"> </div>
           </div>
         </div>
         <div class="input-field third-wrap">
@@ -82,7 +93,10 @@
           </button>
         </div>
       </div>
+    </form>
+
   </div>
+
   <script>
     // $.validator.setDefaults({
     //   ignore: [],
