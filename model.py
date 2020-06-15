@@ -46,15 +46,19 @@ def get_gp_title(application_name):
     return app_title
 
 def get_data_gp():
+    result = []
     for score in scores:
-        result_current, continuation_token = reviews(
-            application_name,
-            lang=language,
-            country=country,
-            sort=Sort.NEWEST,  # defaults to Sort.MOST_RELEVANT
-            count=int(count / len(scores)),  # defaults to 100
-            filter_score_with=score,  # defaults to None(means all score)
-        )
+        try:
+            result_current, continuation_token = reviews(
+                application_name,
+                lang=language,
+                country=country,
+                sort=Sort.NEWEST,  # defaults to Sort.MOST_RELEVANT
+                count=int(count / len(scores)),  # defaults to 100
+                filter_score_with=score,  # defaults to None(means all score)
+            )
+        except IndexError:
+                result_current = [{'content' :'Empty content', 'at': datetime.datetime(2020, 6, 6, 13, 41, 46)}]
         result.extend(result_current)
     return result
 
@@ -86,8 +90,9 @@ def df_from_preproc():
     reviews_list = []
     date = []
     for i in range(len(result)):
-        reviews_list.append(result[i]["content"])
-        date.append(result[i]["at"])
+        if result[i]["content"]:
+            reviews_list.append(result[i]["content"])
+            date.append(result[i]["at"])
 
     df = pd.DataFrame(data={"date": date, "text": reviews_list})
 

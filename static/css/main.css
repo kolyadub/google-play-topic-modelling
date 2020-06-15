@@ -2,16 +2,7 @@
   font-size: 100%;
   font-family: 'Source Sans Pro', sans-serif;
  }
- div#loading {
-    top: 200 px;
-    margin: auto;
-    position: absolute;
-    z-index: 1000;
-    width: 160px;
-    height: 24px;
-    background: url(/static/ajax-loader.gif) no-repeat;
-    cursor: wait;
-  }
+ 
 html {
   line-height: 1.15;
   /* 1 */
@@ -476,6 +467,7 @@ legend {
   font-size: 2em;
   margin: 0.67em 0;
   margin: 0px;
+  font-weight: bold;
 
   /* align-self: center ; */
 }
@@ -483,6 +475,7 @@ legend {
 .h2{
   font-size: 1em;
   padding-top: 10px;
+  font-weight: lighter;
   /* padding-right: 200px; */
   /* padding-left: 0px; */
 }

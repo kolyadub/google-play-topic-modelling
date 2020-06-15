@@ -43,15 +43,6 @@ def report():
         scores = [3,4]
     model.scores = scores
 
-    # model_data = model.topic_keywords()
-    # data = {'model_data' : model_data,
-    #         'app_title' : app_title,
-    #         'count' : count,
-    #         'scores' : scores}
-
-    # with open('file2.txt', 'w+') as file:
-    #     file.write(json.dumps(data))
-
     path = "app_list/"
     filename = "{0}_{1}_{2}".format(app_link, re.sub("[^0-9]", "", str(scores)), str(count)) + ".txt"
     print(filename)
@@ -70,29 +61,10 @@ def report():
         with open(path + filename, 'w+') as file:
             file.write(json.dumps(data))
 
-
-        # commands = ''
-        # filename = 'file2.txt'
-        # with open(filename) as fh:
-        #     for line in fh:
-        #         commands += line
-        # data = json.loads(commands)
-
     return render_template("report.html", data=data)
-
 
 # @app.errorhandler(Exception)
 # def handle_error(e):
-#     print(e)
-#     # original = getattr(e, "google_play_scraper.exceptions.ExtraHTTPError", None)
-
-#     # if original is None:
-#     #     # direct 500 error, such as abort(500)
-#     #     return render_template("error.html"), 500
-
-#     # # wrapped unhandled error
-#     # return render_template("error.html", e=original), 500
-
 #     return render_template("error.html")
 
 if __name__ == "__main__":

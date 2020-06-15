@@ -232,7 +232,7 @@ if __name__ == "__main__":
     scores_to_permute = [[1,2],[3,4],[5]]
     counts_to_permute = [100, 200, 500]
     # permutations = [[app_ids[4]], [[1,2],[5]], [100, 200]]
-    permutations = [app_ids[26:], scores_to_permute, counts_to_permute]
+    permutations = [app_ids[67:], scores_to_permute, counts_to_permute]
     # permutations = [['ru.yandex.yandexnavi'], [[5]], [200]]
     for perm in list(itertools.product(*permutations)):
         application_name = perm[0]

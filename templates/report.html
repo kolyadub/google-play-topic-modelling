@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Topic modelling report</title>
+	<title>Topic Modelling Report</title>
 	<!-- <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" /> -->
 	<script src="/static/js/Chart.min.js"></script>
 	<script src="/static/js/utils.js"></script>
@@ -29,8 +29,8 @@
 			font-family: 'Source Sans Pro', sans-serif;
 			/* border-spacing : 0 5px; */
 			border-radius: 3px;
-			padding-left: 15px;
-			padding-right: 15px;
+			padding-left: 10px;
+			padding-right: 10px;
 			/* border-spacing: 0 5px; */
 			width: 100%;
 			width: 1500px;
@@ -40,14 +40,16 @@
 			text-align: center;
 			font-family: 'Source Sans Pro', sans-serif;
 			/* padding-bottom: 10px; */
+			padding-left: 25px;
+			padding-right: 25px;
 		}
 
 		.headertexth4 {
 			text-align: center;
 			font-family: 'Source Sans Pro', sans-serif;
-			padding-bottom: 30px;
-			margin-left: 200px;
-			margin-right: 200px;
+			padding-bottom: 20px;
+			margin-left: 150px;
+			margin-right: 150px;
 		}
 
 		@media screen and (max-width: 992px) {
@@ -73,30 +75,15 @@
 		var randomScalingFactor = function () {
 			return Math.round(Math.random() * 100);
 		};
-		// var model_data = "{{data}}".replace(/&#39;/g, '"').replace(/&#34;/g, "'");
 		var model_data = "{{data.model_data}}".replace(/&#39;/g, '"');
 		var app_title = "{{data.app_title}}".replace(/&#39;/g, '').replace(/&#34;/g, '');
 		var count = "{{data.count}}".replace(/&#39;/g, '').replace(/&#34;/g, '');
 		var scores = "{{data.scores}}".replace(/&#39;/g, '').replace(/&#34;/g, '').replace("[", '').replace("]", '');
-		console.log(count, scores);
-		console.log(model_data);
 		// preserve newlines, etc - use valid JSON
 		model_data = model_data.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t")
 		// 	.replace(String.fromCharCode(38), "")
 			.replace(String.fromCharCode(92),String.fromCharCode(92,92));
-		// 	.replace(/, #34;/g, ', "')
-		// 	.replace(/&#34;];/g, '"]')
-		// 	.replace(/#34;];/g, '"]')
-		// 	.replace(/\[&#34;/g, '["')
-		// 	.replace(/\[#34;/g, '["')
-		// 	.replace(/\&#34;, /g, '", ')
-		// 	.replace(/I"/g, "I'")
-		// 	.replace(/i"/g, "i'")
-		// 	.replace(/It"/g, "It'")
-		// 	.replace(/it"/g, "it")
-		// 	.replace(/we"/g, "we'")
-		// 	.replace(/We"/g, "We'");
-		console.log(model_data);
+		// console.log(model_data);
 		var obj = JSON.parse(model_data);
 		var topics = [];
 		var number_of_reviews = [];
@@ -142,9 +129,6 @@
 						labels: {
 							percentage: {
 								color: '#616363',
-								// borderColor: '#616363',
-								// borderWidth: 1,
-								// borderRadius: 4,
 								formatter: (value, ctx) => {
 									let sum = 0;
 									let dataArr = ctx.chart.data.datasets[0].data;
@@ -162,8 +146,6 @@
 
 							}
 						},
-						// formatter: function (value) {
-						// 	return Math.round(value) + '%';},
 						font: {
 							weight: 'bold',
 						}
