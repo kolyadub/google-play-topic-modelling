@@ -1,0 +1,1 @@
+{"model_data": {"0": {"number_of_reviews": 1, "reviews": ["Empty content \u041f\u0443\u0441\u0442\u043e\u0439 \u043a\u043e\u043d\u0442\u0435\u043d\u0442"], "dates": ["06-06-2020"], "keywords": ["\u043a\u043e\u043d\u0442\u0435\u043d\u0442", "\u043f\u0443\u0441\u0442\u043e\u0439"]}}, "app_title": null, "count": 500, "scores": [3, 4]}
