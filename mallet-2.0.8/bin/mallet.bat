@@ -1,4 +1,4 @@
-@echo off
+	@echo off
 
 rem This batch file serves as a wrapper for several
 rem  MALLET command line tools.

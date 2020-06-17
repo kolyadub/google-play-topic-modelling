@@ -1,8 +1,10 @@
+# coding=utf8
 import numpy as np
 import pandas as pd
 from pprint import pprint
 import itertools
 import datetime
+import os
 
 import gensim
 import gensim.corpora as corpora
@@ -11,18 +13,28 @@ from gensim.models import CoherenceModel
 
 from google_play_scraper import Sort, reviews, app
 
-import nltk
+ROOT_DIR = os.path.abspath(os.curdir)
+print(ROOT_DIR)
+# import nltk
 
-nltk.download("stopwords")
+# nltk.download("stopwords")
 
 import emoji
 import re
-from nltk.corpus import stopwords
+# from nltk.corpus import stopwords
 from pymystem3 import Mystem
 import string
 import json
 
-mallet_path = "mallet-2.0.8/bin/mallet" 
+os.environ.update({'MALLET_HOME':r''+ROOT_DIR+'/mallet-2.0.8/'})
+mallet_path = ROOT_DIR + "/mallet-2.0.8/bin/mallet"  # Folder path with Mallet
+
+eng_words = []
+with open('mallet-2.0.8/eng_words.txt', 'r') as file:
+    eng_words=file.read().splitlines() 
+eng_words
+
+russian_stopwords = ['c', 'а', 'алло', 'без', 'белый', 'близко', 'более', 'больше', 'большой', 'будем', 'будет', 'будете', 'будешь', 'будто', 'буду', 'будут', 'будь', 'бы', 'бывь', 'в', 'вам', 'вами', 'вас', 'ваш', 'ваша', 'ваше', 'ваши', 'вверх', 'вдали', 'вдруг', 'ведь', 'везде', 'весь', 'взять', 'вид', 'вместе', 'вне', 'во', 'вокруг', 'вон', 'вообще', 'восемнадцатый', 'восемнадцать', 'восемь', 'восьмой', 'вот', 'впрочем', 'времени', 'все', 'все', 'еще', 'всегда', 'всего', 'всем', 'всеми', 'всему', 'всех', 'всею', 'всю', 'всюду', 'вся', 'всё', 'второй', 'вы', 'выйти', 'г', 'где', 'главный', 'глаз', 'говорил', 'говорит', 'год', 'года', 'году', 'да', 'давать', 'давно', 'даже', 'далекий', 'далеко', 'дальше', 'даром', 'два', 'двадцатый', 'двадцать', 'две', 'двенадцатый', 'двенадцать', 'двух', 'девятнадцатый', 'девятнадцать', 'девятый', 'девять', 'действительно', 'дел', 'делал', 'делаю', 'дело', 'день', 'деньги', 'десятый', 'десять', 'для', 'до', 'довольно', 'долго', 'должен', 'должно', 'должный', 'другая', 'другие', 'других', 'друго', 'другое', 'другой', 'е', 'его', 'ее', 'ей', 'ему', 'если', 'есть', 'еще', 'ещё', 'ею', 'её', 'ж', 'же', 'жизнь', 'за', 'занят', 'занята', 'занято', 'заняты', 'затем', 'зато', 'зачем', 'здесь', 'знать', 'значит', 'и', 'иди', 'идти', 'из', 'или', 'им', 'имеет', 'имел', 'именно', 'ими', 'иногда', 'их', 'к', 'каждая', 'каждое', 'каждые', 'каждый', 'кажется', 'казаться', 'как', 'какая', 'какой', 'кем', 'книга', 'когда', 'кого', 'ком', 'кому', 'конечно', 'которая', 'которого', 'которой', 'которые', 'который', 'которых', 'кроме', 'кто', 'куда', 'лет', 'ли', 'лицо', 'лишь', 'лучше', 'м', 'маленький', 'мало', 'между', 'меля', 'менее', 'меньше', 'меня', 'мимо', 'мне', 'много', 'многочисленная', 'многочисленное', 'многочисленные', 'многочисленный', 'мной', 'мною', 'мог', 'могу', 'могут', 'мож', 'может', 'можно', 'можхо', 'мои', 'мой', 'мор', 'мочь', 'моя', 'моё', 'мы', 'на', 'наверху', 'над', 'надо', 'назад', 'наиболее', 'найти', 'наконец', 'нам', 'нами', 'нас', 'наш', 'наша', 'наше', 'наши', 'него', 'недавно', 'недалеко', 'нее', 'ней', 'некоторый', 'нельзя', 'нем', 'немного', 'нему', 'непрерывно', 'нередко', 'несколько', 'нет', 'нею', 'неё', 'ни', 'нибудь', 'ниже', 'низко', 'никакой', 'никогда', 'никто', 'никуда', 'ним', 'ними', 'них', 'ничего', 'ничто', 'но', 'новый', 'нога', 'ночь', 'ну', 'нужно', 'нужный', 'нх', 'о', 'об', 'оба', 'обычно', 'один', 'одиннадцатый', 'одиннадцать', 'однажды', 'однако', 'одного', 'одной', 'оказаться', 'окно', 'около', 'он', 'она', 'они', 'оно', 'опять', 'особенно', 'от', 'откуда', 'отовсюду', 'отсюда', 'очень', 'первый', 'перед', 'по', 'под', 'подойди', 'пожалуйста', 'позже', 'пока', 'пор', 'пора', 'после', 'последний', 'посреди', 'потом', 'потому', 'почему', 'почти', 'правда', 'прекрасно', 'при', 'про', 'просто', 'против', 'пятнадцатый', 'пятнадцать', 'пятый', 'пять', 'раз', 'разве', 'рано', 'раньше', 'ряд', 'рядом', 'с', 'с', 'кем', 'сам', 'сама', 'сами', 'самим', 'самими', 'самих', 'само', 'самого', 'самой', 'самом', 'самому', 'саму', 'самый', 'свет', 'свое', 'своего', 'своей', 'свои', 'своих', 'свой', 'свою', 'сделать', 'сеаой', 'себе', 'себя', 'сегодня', 'седьмой', 'сейчас', 'семнадцатый', 'семнадцать', 'семь', 'сих', 'сколько', 'слишком', 'слово', 'сначала', 'снова', 'со', 'собой', 'собою', 'совсем', 'спасибо', 'сразу', 'старый', 'т', 'та', 'так', 'такая', 'также', 'таки', 'такие', 'такое', 'такой', 'там', 'твои', 'твой', 'твоя', 'твоё', 'те', 'тебе', 'тебя', 'тем', 'теми', 'теперь', 'тех', 'то', 'тобой', 'тобою', 'тогда', 'того', 'тоже', 'только', 'том', 'тому', 'тот', 'тою', 'третий', 'три', 'тринадцатый', 'тринадцать', 'ту', 'туда', 'тут', 'ты', 'тысяч', 'у', 'уж', 'уже', 'хороший', 'хорошо', 'хотел', 'бы', 'хотеть', 'хоть', 'хотя', 'хочешь', 'час', 'часто', 'часть', 'чаще', 'чего', 'чем', 'чему', 'через', 'четвертый', 'четыре', 'четырнадцатый', 'четырнадцать', 'что', 'чтоб', 'чтобы', 'чуть', 'шестнадцатый', 'шестнадцать', 'шестой', 'шесть', 'эта', 'эти', 'этим', 'этими', 'этих', 'это', 'этого', 'этой', 'этом', 'этому', 'этот', 'эту', 'я']
 
 num_topics = 5
 number_of_reviews = 5
@@ -33,10 +45,10 @@ count = 200  # The number of reviews
 language = "ru"  # Review language
 country = "ru"  # Review region
 
-mystem = Mystem()
-russian_stopwords = stopwords.words("russian")
-russian_stopwords.append("это")
-russian_stopwords.remove("не")
+try:
+    mystem = Mystem()
+except FileExistsError:
+    print("Dierctory exists")
 
 def get_gp_title(application_name):
     app_info = app(
@@ -60,7 +72,7 @@ def get_data_gp():
                 filter_score_with=score,  # defaults to None(means all score)
             )
         except IndexError:
-                result_current = [{'content' :'Empty content', 'at': datetime.datetime(2020, 6, 6, 13, 41, 46)}]
+                result_current = [{'content' :'Empty content Пустой контент', 'at': datetime.datetime(2020, 6, 6, 13, 41, 46)}]
         result.extend(result_current)
     print(scores, count, count_per_score, filename, "NUMBER: ", len(result))
     return result
@@ -80,6 +92,7 @@ def preprocess_text_rus(text):
         if token not in russian_stopwords
         and token != " "
         and token not in emoji.UNICODE_EMOJI
+        and token not in eng_words
     ]
     text = " ".join(tokens)
     # Verbs with не are more informative in the case of negative reviews
@@ -194,8 +207,7 @@ def topic_keywords():
 
     for key, value in topic_counts.items():
         output[str(int(key))] = {"number_of_reviews": value}
-        # output[str(int(key))]['reviews'] = review_with_topic_info_df[review_with_topic_info_df.dominant_topic == key].sort_values(
-        #     'perc_contribution', ascending=False)[:number_of_reviews]['text'].to_list()
+
         texts = (
             review_with_topic_info_df[review_with_topic_info_df.dominant_topic == key]
             .sort_values("perc_contribution", ascending=False)[:number_of_reviews][
@@ -231,9 +243,9 @@ if __name__ == "__main__":
     
     scores_to_permute = [[1,2],[3,4],[5]]
     counts_to_permute = [100, 200, 500]
-    # permutations = [[app_ids[4]], [[1,2],[5]], [100, 200]]
-    permutations = [app_ids[67:], scores_to_permute, counts_to_permute]
-    # permutations = [['ru.yandex.yandexnavi'], [[5]], [200]]
+    permutations = [app_ids[16:], scores_to_permute, counts_to_permute]
+    # permutations = [app_ids[16:17], [[3,4]], [100]]
+
     for perm in list(itertools.product(*permutations)):
         application_name = perm[0]
         scores = perm[1] 

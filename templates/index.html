@@ -7,7 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="author" content="colorlib.com">
 
-
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
@@ -21,29 +20,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/selectric@1.13.0/public/jquery.selectric.min.js"></script>
-  <!-- <script src="/static/js/form-validation.js"></script> -->
-  <!-- <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" /> -->
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <link href="/static/css/main.css" rel="stylesheet" />
   <link href="/static/css/selectric.css" rel="stylesheet" />
   <link href="/static/css/pace-flat-top.css" rel="stylesheet" />
-  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
+
 
 </head>
-<script type="text/javascript">// <![CDATA[
-  function preloader(){
-      document.getElementById("loading").style.display = "none";
-      document.getElementById("content").style.display = "block";
-  }//preloader
-  window.onload = preloader;
-// ]]></script>
 <body>
   <h1 class="header h1">
     Mini topic modelling service for Google Play applications
   </h1 >
   <h2 class="header h2">It helps to categorize reviews for an application based on Latent Dirichlet Allocation (LDA) algorithm. The categories will be outlined with the most descriptive keywords.</h2>
-  <!-- <h3 class="header h3">* The categorization may take up to 30 seconds and currently available only for 'ru' region </h3> -->
   <div class="s003">
     <div id="loading"></div>
     <form name="input" action="{{url_for('loading')}}" method="POST">
@@ -95,17 +83,11 @@
         </div>
       </div>
     </form>
-
   </div>
-
   <script>
-    // $.validator.setDefaults({
-    //   ignore: [],
-    // });
     $(function () {
       $('select').selectric();
     });
   </script>
 </body>
-
 </html>

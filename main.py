@@ -5,10 +5,9 @@ import model
 import os.path
 import re
 import requests
-import redis
 import time
 
-app = Flask(__name__, static_url_path="/static/", static_folder='/Users/nd/Documents/GitHub/google-play-topic-modelling/static/')
+app = Flask(__name__, static_url_path="/static/", static_folder='static/')
 req_form = {}
 
 @app.route("/", methods=["GET", "POST"])
