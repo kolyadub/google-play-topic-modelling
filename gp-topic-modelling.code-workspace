@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../flask_loading_screen"
+		}
+	],
+	"settings": {
+		"python.pythonPath": "/Users/nd/opt/anaconda3/bin/python",
+		"liveServer.settings.multiRootWorkspaceName": "google-play-topic-modelling"
+	}
+}
