@@ -243,7 +243,7 @@ if __name__ == "__main__":
     
     scores_to_permute = [[1,2],[3,4],[5]]
     counts_to_permute = [100, 200, 500]
-    permutations = [app_ids[79:], scores_to_permute, counts_to_permute]
+    permutations = [app_ids, scores_to_permute, counts_to_permute]
     # permutations = [app_ids[16:17], [[3,4]], [100]]
 
     for perm in list(itertools.product(*permutations)):
